@@ -71,17 +71,15 @@ class Keeper:
 
  
     def _check_keeper_account(self):
-        with open(config.KEEPER_KEY) as f:
-            read_key = f.read().replace("\n","")
-            try:
-                account = Account()
-                acct = account.from_key(read_key)
-                print(acct.address)
-                self.keeper_account = Address(acct.address)
-                self.web3.middleware_onion.add(construct_sign_and_send_raw_middleware(acct))
-            except Exception as e:
-                self.logger.warning(f"check private key error: {e}")
-                return False
+        try:
+            account = Account()
+            acct = account.from_key(config.KEEPER_KEY)
+            print(acct.address)
+            self.keeper_account = Address(acct.address)
+            self.web3.middleware_onion.add(construct_sign_and_send_raw_middleware(acct))
+        except Exception as e:
+            self.logger.warning(f"check private key error: {e}")
+            return False
             
         return True
 
